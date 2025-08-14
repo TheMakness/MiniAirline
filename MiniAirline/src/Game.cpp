@@ -1,30 +1,49 @@
 #include "Game.h"
 
+#define getRandom() static_cast <float> (rand()) / static_cast <float> (RAND_MAX)
+
+const sf::Time TimePerFrame = sf::seconds(1.f / 60.f);
+
+
+
 Game::Game()
 	: m_Window(sf::VideoMode({ 1920, 1080 }), "SFML Application")
-	, m_Player()
 	, m_PlayerSpeed(100.f)
 	, m_leftKeyPressed(false)
 	, m_rightKeyPressed(false)
 	, m_upKeyPressed(false)
 	, m_downKeyPressed(false)
+	, m_Planes (* new std::vector<Plane>())
 {
-	m_Player.setRadius(40.f);
-	sf::Vector2u center = m_Window.getSize();
-	center.x /= 2;
-	center.y /= 2;
-	m_Player.setPosition({(float)center.x,(float)center.y});
-	m_Player.setFillColor(sf::Color::Cyan);
+	sf::Vector2u screenSize = m_Window.getSize();
+	sf::Vector2u center = { screenSize.x/2,screenSize.y/2 };
+
+	m_Planes.reserve(5);
+
+	for (size_t i = 0; i < 5; i++)
+	{
+		m_Planes.emplace_back(Plane({ getRandom() * screenSize.x,getRandom() * screenSize.y }, { getRandom() * 50, getRandom() * 50 }));
+	}
+
+
+	m_Window.setVerticalSyncEnabled(true);
 }
 
 void Game::run()
 {
 	sf::Clock clock;
+	sf::Time timeSinceLastUpdate = sf::Time::Zero;
 	while (m_Window.isOpen())
 	{
-		sf::Time deltaTime = clock.restart();
 		processEvents();
-		update(deltaTime);
+		timeSinceLastUpdate += clock.restart();
+
+		while (timeSinceLastUpdate > TimePerFrame)
+		{
+			timeSinceLastUpdate -= TimePerFrame;
+			processEvents();
+			update(TimePerFrame);
+		}
 		render();
 	}
 }
@@ -45,22 +64,21 @@ void Game::processEvents()
 
 void Game::update(sf::Time deltaTime)
 {
-	sf::Vector2f movement(0.f, 0.f);
-	if (m_upKeyPressed)
-		movement.y -= m_PlayerSpeed;
-	if (m_downKeyPressed)
-		movement.y += m_PlayerSpeed;
-	if (m_leftKeyPressed)
-		movement.x -= m_PlayerSpeed;
-	if (m_rightKeyPressed)
-		movement.x += m_PlayerSpeed;
-	m_Player.move(movement * deltaTime.asSeconds());
+	for (size_t i = 0; i < m_Planes.size(); i++)
+	{
+		m_Planes[i].move(m_Planes[i].getVelocity() * deltaTime.asSeconds());
+	}
+	
 }
 
 void Game::render()
 {
 	m_Window.clear();
-	m_Window.draw(m_Player);
+	for (size_t i = 0; i < m_Planes.size(); i++)
+	{
+		m_Window.draw(m_Planes[i].getShape());
+	}
+	
 	m_Window.display();
 }
 

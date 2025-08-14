@@ -1,4 +1,5 @@
 #include <SFML\Graphics.hpp>
+#include "Plane.h"
 
 
 class Game
@@ -16,7 +17,7 @@ private:
 
 private:
 	sf::RenderWindow m_Window;
-	sf::CircleShape m_Player;
+	std::vector<Plane> &m_Planes;
 	float m_PlayerSpeed;
 
 	bool m_upKeyPressed, m_downKeyPressed, m_leftKeyPressed, m_rightKeyPressed;
