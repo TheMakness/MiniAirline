@@ -1,8 +1,16 @@
 #include "Game.h"
 
 #define getRandom() static_cast <float> (rand()) / static_cast <float> (RAND_MAX)
+#define RandomPlane() { getRandom() * screenSize.x,getRandom() * screenSize.y }, { getRandom() * 50, getRandom() * 50 }
+#define RandomPlane2() { getRandom() * 1920,getRandom() * 1080}, { getRandom() * 50, getRandom() * 50 }
 
 const sf::Time TimePerFrame = sf::seconds(1.f / 60.f);
+
+
+Plane p = Plane(RandomPlane2());
+Plane p1 = Plane(RandomPlane2());
+Plane p2 = Plane(RandomPlane2());
+
 
 
 
@@ -13,7 +21,7 @@ Game::Game()
 	, m_rightKeyPressed(false)
 	, m_upKeyPressed(false)
 	, m_downKeyPressed(false)
-	, m_Planes (* new std::vector<Plane>())
+	, m_Planes(std::vector<Plane*>())
 {
 	sf::Vector2u screenSize = m_Window.getSize();
 	sf::Vector2u center = { screenSize.x/2,screenSize.y/2 };
@@ -22,11 +30,19 @@ Game::Game()
 
 	for (size_t i = 0; i < 5; i++)
 	{
-		m_Planes.emplace_back(Plane({ getRandom() * screenSize.x,getRandom() * screenSize.y }, { getRandom() * 50, getRandom() * 50 }));
+		Plane* p = new Plane(RandomPlane());
+		m_Planes.push_back(p);
 	}
 
-
 	m_Window.setVerticalSyncEnabled(true);
+}
+
+Game::~Game()
+{
+	for (size_t i = 0; i < 5; i++)
+	{
+		delete m_Planes[i];
+	}
 }
 
 void Game::run()
@@ -66,7 +82,7 @@ void Game::update(sf::Time deltaTime)
 {
 	for (size_t i = 0; i < m_Planes.size(); i++)
 	{
-		m_Planes[i].move(m_Planes[i].getVelocity() * deltaTime.asSeconds());
+		m_Planes[i]->move(m_Planes[i]->getVelocity() * deltaTime.asSeconds());
 	}
 	
 }
@@ -76,9 +92,9 @@ void Game::render()
 	m_Window.clear();
 	for (size_t i = 0; i < m_Planes.size(); i++)
 	{
-		m_Window.draw(m_Planes[i].getShape());
+		m_Planes[i]->draw(m_Window,sf::RenderStates::Default);
 	}
-	
+
 	m_Window.display();
 }
 

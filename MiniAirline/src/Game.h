@@ -6,6 +6,7 @@ class Game
 {
 public:
 	Game();
+	~Game();
 	void run();
 
 private:
@@ -17,7 +18,7 @@ private:
 
 private:
 	sf::RenderWindow m_Window;
-	std::vector<Plane> &m_Planes;
+	std::vector<Plane*> m_Planes;
 	float m_PlayerSpeed;
 
 	bool m_upKeyPressed, m_downKeyPressed, m_leftKeyPressed, m_rightKeyPressed;
