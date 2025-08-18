@@ -1,9 +1,11 @@
+#pragma once
 #include <string>
 #include <iostream>
 #include "Waypoint.h"
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/System/Vector2.hpp>
+#include "ResourceHolder.h"
 
 class Plane : public sf::Drawable
 {
@@ -20,7 +22,7 @@ private:
 	sf::Color m_Color;
 	sf::Vector2f m_Velocity;
 	sf::Vector2f m_Position = sf::Vector2f(50,50);
-	sf::Texture* m_Texture;
+	ResourceHolder <sf::Texture, std::string> textures;
 	sf::Sprite* m_Sprite;
 	
 	

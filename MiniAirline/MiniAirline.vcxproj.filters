@@ -38,5 +38,11 @@
     <ClInclude Include="src\Waypoint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ResourceHolder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ResourceHolder.inl">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -5,16 +5,8 @@ Plane::Plane(sf::Vector2f pos, sf::Vector2f vel)
 	m_Velocity(vel),
 	m_Color(sf::Color::Blue)
 {
-	m_Texture = new sf::Texture;
-	
-
-	if (!m_Texture->loadFromFile("media/textures/plane.png"))
-	{
-		std::cout << "Texture loading error" << std::endl;
-	}
-
-	m_Sprite = new sf::Sprite(*m_Texture);
-	m_Sprite->setTexture(*m_Texture);
+	textures.load("Airplane", "media/textures/plane.png");
+	m_Sprite = new sf::Sprite(textures.get("Airplane"));
 
 	m_Sprite->setPosition(m_Position);
 	m_Sprite->setColor(m_Color);
@@ -23,7 +15,6 @@ Plane::Plane(sf::Vector2f pos, sf::Vector2f vel)
 
 Plane::~Plane()
 {
-	delete m_Texture;
 	delete m_Sprite;
 }
 
