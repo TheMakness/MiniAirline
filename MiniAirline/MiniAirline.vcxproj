@@ -155,18 +155,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\SceneNode.cpp" />
+    <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\Plane.cpp" />
+    <ClCompile Include="src\Aircraft.cpp" />
+    <ClCompile Include="src\World.cpp" />
+    <ClInclude Include="src\SceneNode.h" />
+    <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\ResourceHolder.inl">
       <FileType>Document</FileType>
     </ClInclude>
     <ClCompile Include="src\Waypoint.cpp" />
+    <ClInclude Include="src\World.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Game.h" />
-    <ClInclude Include="src\Plane.h" />
+    <ClInclude Include="src\Aircraft.h" />
     <ClInclude Include="src\ResourceHolder.h" />
+    <ClInclude Include="src\ResourceIdentifiers.h" />
     <ClInclude Include="src\Waypoint.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

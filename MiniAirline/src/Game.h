@@ -1,13 +1,12 @@
 #pragma once
 #include <SFML\Graphics.hpp>
-#include "Plane.h"
+#include "Aircraft.h"
 
 
 class Game
 {
 public:
 	Game();
-	~Game();
 	void run();
 
 private:
@@ -19,7 +18,7 @@ private:
 
 private:
 	sf::RenderWindow m_Window;
-	std::vector<Plane*> m_Planes;
+	std::vector<std::unique_ptr<Aircraft>> m_Planes;
 	float m_PlayerSpeed;
 
 	bool m_upKeyPressed, m_downKeyPressed, m_leftKeyPressed, m_rightKeyPressed;
