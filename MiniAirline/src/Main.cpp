@@ -4,7 +4,13 @@
 int main()
 {
 
-	Game game;
-	game.run();
-
+	try 
+	{
+		Game game;
+		game.run();
+	}
+    catch (std::exception& e)
+    {
+    printf("\nEXCEPTION: %s", e.what());
+    }
 } 

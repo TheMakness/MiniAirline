@@ -1,37 +1,18 @@
 #include "Game.h"
 
-#define getRandom() static_cast <float> (rand()) / static_cast <float> (RAND_MAX)
-#define RandomPlanePosition() { getRandom() * screenSize.x,getRandom() * screenSize.y }
-#define RandomPlaneVelocity() { getRandom() * 50, getRandom() * 50 }
+
 
 const sf::Time TimePerFrame = sf::seconds(1.f / 60.f);
 
 
 Game::Game()
 	: m_Window(sf::VideoMode({ 1920, 1080 }), "SFML Application")
-	, m_PlayerSpeed(100.f)
 	, m_leftKeyPressed(false)
 	, m_rightKeyPressed(false)
 	, m_upKeyPressed(false)
 	, m_downKeyPressed(false)
-	, m_Planes(std::vector<std::unique_ptr<Aircraft>>())
+	,m_World(m_Window)
 {
-	sf::Vector2u screenSize = m_Window.getSize();
-	sf::Vector2u center = { screenSize.x/2,screenSize.y/2 };
-
-	m_Planes.reserve(5);
-
-	TextureHolder textures;
-	textures.load(Textures::ID::Airplane, "media/textures/plane.png");
-
-	for (size_t i = 0; i < 5; i++)
-	{
-		auto p = std::make_unique<Aircraft>(Aircraft::Type::Civilian, textures);
-		p->move(RandomPlanePosition());
-		p->SetVelocity(RandomPlaneVelocity());
-		m_Planes.push_back(move(p));
-	}
-
 	m_Window.setVerticalSyncEnabled(true);
 }
 
@@ -70,22 +51,13 @@ void Game::processEvents()
 
 void Game::update(sf::Time deltaTime)
 {
-	for (size_t i = 0; i < m_Planes.size(); i++)
-	{
-		m_Planes[i]->move(m_Planes[i]->getVelocity() * deltaTime.asSeconds());
-	}
 	
 }
 
 void Game::render()
 {
 	m_Window.clear();
-	for (size_t i = 0; i < m_Planes.size(); i++)
-	{
-		//m_Window.draw(*m_Planes[i],sf::RenderStates::Default);
-	}
-	
-
+	m_World.draw();
 	m_Window.display();
 }
 

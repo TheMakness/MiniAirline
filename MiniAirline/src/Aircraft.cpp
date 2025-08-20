@@ -8,6 +8,7 @@ Aircraft::Aircraft(Type type, const TextureHolder& textures) :
 {
 	sf::FloatRect bounds = m_Sprite.getLocalBounds();
 	m_Sprite.setOrigin(bounds.getCenter());
+	m_Sprite.setScale({ 0.2f,0.2f });
 }
 
 void Aircraft::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const

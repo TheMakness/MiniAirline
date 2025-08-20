@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML\Graphics.hpp>
 #include "Aircraft.h"
+#include "World.h"
 
 
 class Game
@@ -18,8 +19,6 @@ private:
 
 private:
 	sf::RenderWindow m_Window;
-	std::vector<std::unique_ptr<Aircraft>> m_Planes;
-	float m_PlayerSpeed;
-
+	World m_World;
 	bool m_upKeyPressed, m_downKeyPressed, m_leftKeyPressed, m_rightKeyPressed;
 };

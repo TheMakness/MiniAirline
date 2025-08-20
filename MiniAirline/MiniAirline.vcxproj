@@ -160,6 +160,7 @@
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Aircraft.cpp" />
+    <ClCompile Include="src\SpriteNode.cpp" />
     <ClCompile Include="src\World.cpp" />
     <ClInclude Include="src\SceneNode.h" />
     <ClInclude Include="src\Entity.h" />
@@ -167,6 +168,7 @@
       <FileType>Document</FileType>
     </ClInclude>
     <ClCompile Include="src\Waypoint.cpp" />
+    <ClInclude Include="src\SpriteNode.h" />
     <ClInclude Include="src\World.h" />
   </ItemGroup>
   <ItemGroup>
