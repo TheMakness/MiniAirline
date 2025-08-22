@@ -94,7 +94,16 @@ void Player::handleEvent(const sf::Event& event, CommandQueue& commands, World& 
 	{
 		if ((mouseButtonRelease->button == sf::Mouse::Button::Left) && m_SelectedAircraft)
 		{
-			m_SelectedAircraft->SetVelocity((GetRelativeMouseCoordinate - m_PreviousMousePosition).normalized() * 100.f);
+			auto mouseDeltaPosition = (GetRelativeMouseCoordinate - m_PreviousMousePosition);
+			if (mouseDeltaPosition.length() > 0)
+			{
+				auto direction = mouseDeltaPosition.normalized();
+				m_SelectedAircraft->SetVelocity(direction * (m_SelectedAircraft->getVelocity()).length());
+
+				m_SelectedAircraft->AlignToVelocity();
+			}
+			
+			
 			m_SelectedAircraft = nullptr;
 		}
 	}

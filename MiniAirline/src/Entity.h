@@ -7,6 +7,9 @@ class Entity : public SceneNode
 {
 public:
 
+
+	void AlignToVelocity();
+
 	void SetVelocity(sf::Vector2f velocity);
 	void SetVelocity(float vx, float vy);
 	void accelerate(sf::Vector2f velocity);
