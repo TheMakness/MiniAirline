@@ -41,7 +41,7 @@ void Game::processInput()
 
 	while (const std::optional event = m_Window.pollEvent())
 	{
-		m_Player.handleEvent(event.value(), commands, m_Window, m_World.getView());
+		m_Player.handleEvent(event.value(), commands, m_World);
 
 		if (event->is<sf::Event::Closed>())
 			m_Window.close();

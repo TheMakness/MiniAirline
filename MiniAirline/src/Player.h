@@ -1,9 +1,8 @@
 #pragma once
-#include <SFML/Window/WindowBase.hpp>
-#include "CommandQueue.h"
-#include <map>
-#include "Aircraft.h"
 #include "World.h"
+#include "Aircraft.h"
+
+class World;
 
 class Player
 {
@@ -23,7 +22,7 @@ public:
 public:
 	Player();
 
-	void handleEvent(const sf::Event& event, CommandQueue& commands, sf::RenderWindow& window, sf::View& view);
+	void handleEvent(const sf::Event& event, CommandQueue& commands, World& world);
 	void handleRealtimeInput(CommandQueue& commands);
 
 	void assignKey(Action action, sf::Keyboard::Key key);
@@ -39,4 +38,5 @@ private:
 	std::map<sf::Keyboard::Key, Action>		m_KeyBinding;
 	std::map<Action, Command>				m_ActionBinding;
 	Aircraft*								m_SelectedAircraft;
+	sf::Vector2f m_PreviousMousePosition;
 };

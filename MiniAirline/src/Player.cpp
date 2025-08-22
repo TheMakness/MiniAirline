@@ -1,11 +1,10 @@
 #include "Player.h"
-#include "CommandQueue.h"
-#include "Aircraft.h"
-
 #include <map>
 #include <string>
 #include <algorithm>
 
+
+#define GetRelativeMouseCoordinate world.getRenderWindow().mapPixelToCoords(sf::Mouse::getPosition(world.getRenderWindow()))
 
 struct AircraftMover
 {
@@ -62,16 +61,16 @@ Player::Player()
 		pair.second.category = Category::Aircraft;
 }
 
-void Player::handleEvent(const sf::Event& event, CommandQueue& commands, sf::RenderWindow& window, sf::View& view )
+void Player::handleEvent(const sf::Event& event, CommandQueue& commands, World& world)
 {
 	if (const auto* keyPressed = event.getIf<sf::Event::KeyPressed>())
 	{
 		// Check if pressed key appears in key binding, trigger command if so
 		auto found = m_KeyBinding.find(keyPressed->code);
 		if (found->second == ZoomIn)
-			view.zoom(.5);
+			world.zoomIn();
 		else if(found->second == ZoomOut)
-			view.zoom(2);
+			world.zoomOut();
 		else if (found != m_KeyBinding.end() && !isRealtimeAction(found->second))
 				commands.push(m_ActionBinding[found->second]);
 		
@@ -82,10 +81,11 @@ void Player::handleEvent(const sf::Event& event, CommandQueue& commands, sf::Ren
 	{
 		if (mouseButtonPressed->button == sf::Mouse::Button::Left)
 		{
+			m_PreviousMousePosition = GetRelativeMouseCoordinate;
 			Command c;
 			c.category = Category::Aircraft;
-			c.action = derivedAction<Aircraft>(FindSelectedAircraft(m_SelectedAircraft,
-			window.mapPixelToCoords(sf::Mouse::getPosition(window))));
+			c.action = derivedAction<Aircraft>(FindSelectedAircraft(m_SelectedAircraft
+				,m_PreviousMousePosition));
 			commands.push(c);
 		}
 	}
@@ -94,7 +94,7 @@ void Player::handleEvent(const sf::Event& event, CommandQueue& commands, sf::Ren
 	{
 		if ((mouseButtonRelease->button == sf::Mouse::Button::Left) && m_SelectedAircraft)
 		{
-			m_SelectedAircraft->SetVelocity(-m_SelectedAircraft->getVelocity());
+			m_SelectedAircraft->SetVelocity((GetRelativeMouseCoordinate - m_PreviousMousePosition).normalized() * 100.f);
 			m_SelectedAircraft = nullptr;
 		}
 	}

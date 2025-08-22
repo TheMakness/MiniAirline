@@ -1,6 +1,5 @@
 #include "World.h"
 #include "SpriteNode.h"
-#include "Aircraft.h"
 
 
 #define getRandom() static_cast <float> (rand()) / static_cast <float> (RAND_MAX)
@@ -32,9 +31,14 @@ CommandQueue& World::getCommandQueue()
 	return m_CommandQueue;
 }
 
-sf::View& World::getView()
+const sf::View& World::getView() const
 {
 	return m_WorldView;
+}
+
+const sf::RenderWindow& World::getRenderWindow() const
+{
+	return m_Window;
 }
 
 void World::loadTextures()
@@ -85,4 +89,22 @@ void World::update(sf::Time deltaTime)
 		m_SceneGraph.onCommand(m_CommandQueue.pop(), deltaTime);
 	m_SceneGraph.update(deltaTime);
 
+}
+
+void World::zoomIn()
+{
+	if (m_ZoomLevel > m_MinZoomLevel)
+	{
+		m_WorldView.zoom(.9f);
+		m_ZoomLevel -= .1f;
+	}
+}
+
+void World::zoomOut()
+{
+	if (m_ZoomLevel < m_MaxZoomLevel)
+	{
+		m_WorldView.zoom(1.1f);
+		m_ZoomLevel += .1f;
+	}
 }

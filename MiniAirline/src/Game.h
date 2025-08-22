@@ -10,8 +10,6 @@ public:
 	Game();
 	void run();
 
-	
-
 private:
 	void processInput();
 	void update(sf::Time deltaTime);

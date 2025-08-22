@@ -12,11 +12,14 @@ class World
 public:
 	explicit World(sf::RenderWindow& window);
 	void update(sf::Time deltaTime);
+	void zoomIn();
+	void zoomOut();
 	void draw();
 
 	CommandQueue& getCommandQueue();
 
-	sf::View& getView();
+	const sf::View& getView() const;
+	const sf::RenderWindow& getRenderWindow() const;
 
 private:
 	enum class Layer
@@ -38,6 +41,10 @@ private:
 	
 	sf::FloatRect m_WorldBounds;
 	sf::Vector2f m_SpawnPosition;
+
+	float m_ZoomLevel = 1.f;
+	float m_MinZoomLevel = 0.5f;
+	float m_MaxZoomLevel = 5.f;
 	
 private:
 	void loadTextures();
