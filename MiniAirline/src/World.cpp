@@ -11,20 +11,30 @@ World::World(sf::RenderWindow& window) :
 	, m_Textures()
 	, m_SceneGraph()
 	, m_SceneLayers()
-	, m_WorldBounds({ 0,0 } , { m_WorldView.getSize().x,m_WorldView.getSize().y })
+	, m_WorldBounds({ 0,0 } ,{ m_WorldView.getSize().x * 10,m_WorldView.getSize().y * 10 })
 	, m_SpawnPosition(m_WorldView.getSize().x / 2, m_WorldView.getSize().y / 2)
 {
 	loadTextures();
 	buildScene();
 
 	m_WorldView.setCenter(m_WorldBounds.getCenter());
-	m_WorldView.zoom(2.f);
+	//m_WorldView.zoom(2.f);
 }
 
 void World::draw()
 {
 	m_Window.setView(m_WorldView);
 	m_Window.draw(m_SceneGraph);
+}
+
+CommandQueue& World::getCommandQueue()
+{
+	return m_CommandQueue;
+}
+
+sf::View& World::getView()
+{
+	return m_WorldView;
 }
 
 void World::loadTextures()
@@ -60,7 +70,10 @@ void World::buildScene()
 	{
 		auto aircraft = std::make_unique<Aircraft>(Aircraft::Type::Civilian, m_Textures);
 		aircraft->setPosition({getRandom() * m_WorldBounds.size.x, getRandom() * m_WorldBounds.size.y});
-		aircraft->SetVelocity((m_WorldBounds.getCenter() - aircraft->getPosition()).normalized());
+		aircraft->SetVelocity((m_WorldBounds.getCenter() - aircraft->getPosition()).normalized() * 100.f);
+
+		//aircraft->setPosition({ 967, 526 });
+	
 		m_SceneLayers[static_cast<int>(Layer::Air)]->attachChild(std::move(aircraft));
 	}
 
@@ -68,5 +81,8 @@ void World::buildScene()
 
 void World::update(sf::Time deltaTime)
 {
+	while (!m_CommandQueue.isEmpty())
+		m_SceneGraph.onCommand(m_CommandQueue.pop(), deltaTime);
 	m_SceneGraph.update(deltaTime);
+
 }

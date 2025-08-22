@@ -155,6 +155,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Command.cpp" />
+    <ClCompile Include="src\CommandQueue.cpp" />
+    <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\SceneNode.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Game.cpp" />
@@ -162,6 +165,10 @@
     <ClCompile Include="src\Aircraft.cpp" />
     <ClCompile Include="src\SpriteNode.cpp" />
     <ClCompile Include="src\World.cpp" />
+    <ClInclude Include="src\Category.h" />
+    <ClInclude Include="src\Command.h" />
+    <ClInclude Include="src\CommandQueue.h" />
+    <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\SceneNode.h" />
     <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\ResourceHolder.inl">

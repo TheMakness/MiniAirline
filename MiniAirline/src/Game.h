@@ -10,15 +10,16 @@ public:
 	Game();
 	void run();
 
+	
+
 private:
-	void processEvents();
+	void processInput();
 	void update(sf::Time deltaTime);
 	void render();
-	void onKeyPressed(const sf::Event::KeyPressed& keyPressed);
-	void onKeyReleased(const sf::Event::KeyReleased& keyReleased);
 
 private:
 	sf::RenderWindow m_Window;
 	World m_World;
 	bool m_upKeyPressed, m_downKeyPressed, m_leftKeyPressed, m_rightKeyPressed;
+	Player m_Player;
 };

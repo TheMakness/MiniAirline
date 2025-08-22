@@ -1,7 +1,6 @@
 #include "Aircraft.h"
 
 
-
 Aircraft::Aircraft(Type type, const TextureHolder& textures) :
 	m_Type(type), 
 	m_Sprite(textures.get(Textures::ID::Airplane))
@@ -15,3 +14,18 @@ void Aircraft::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) co
 {
 	target.draw(m_Sprite, states);
 }
+
+unsigned int Aircraft::getCategory() const
+{
+	return Category::Aircraft;
+}
+
+bool Aircraft::isSelected(sf::Vector2f mousePos)
+{
+	//return m_Sprite.getGlobalBounds().contains(mousePos);
+	return  (getWorldPosition() - mousePos ).length() < 50;
+	//return true;
+}
+
+
+

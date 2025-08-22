@@ -11,7 +11,8 @@ Game::Game()
 	, m_rightKeyPressed(false)
 	, m_upKeyPressed(false)
 	, m_downKeyPressed(false)
-	,m_World(m_Window)
+	, m_World(m_Window)
+	, m_Player()
 {
 	m_Window.setVerticalSyncEnabled(true);
 }
@@ -22,36 +23,36 @@ void Game::run()
 	sf::Time timeSinceLastUpdate = sf::Time::Zero;
 	while (m_Window.isOpen())
 	{
-		processEvents();
 		timeSinceLastUpdate += clock.restart();
-
 		while (timeSinceLastUpdate > TimePerFrame)
 		{
 			timeSinceLastUpdate -= TimePerFrame;
-			processEvents();
+			processInput();
 			update(TimePerFrame);
 		}
 		render();
 	}
 }
 
-void Game::processEvents()
+void Game::processInput()
 {
+
+	CommandQueue& commands = m_World.getCommandQueue();
 
 	while (const std::optional event = m_Window.pollEvent())
 	{
+		m_Player.handleEvent(event.value(), commands, m_Window, m_World.getView());
+
 		if (event->is<sf::Event::Closed>())
 			m_Window.close();
-		else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
-			onKeyPressed(*keyPressed);
-		else if (const auto* keyRelease = event->getIf<sf::Event::KeyReleased>())
-			onKeyReleased(*keyRelease);
 	}
+
+	m_Player.handleRealtimeInput(commands);
 }
 
 void Game::update(sf::Time deltaTime)
 {
-	
+	m_World.update(deltaTime);
 }
 
 void Game::render()
@@ -61,43 +62,7 @@ void Game::render()
 	m_Window.display();
 }
 
-void Game::onKeyPressed(const sf::Event::KeyPressed& keyPressed)
-{
-		
-	switch (keyPressed.scancode)
-	{
-	case sf::Keyboard::Scancode::Left:
-		m_leftKeyPressed = true;
-		break;
-	case sf::Keyboard::Scancode::Right:
-		m_rightKeyPressed = true;
-		break;
-	case sf::Keyboard::Scancode::Up:
-		m_upKeyPressed = true;
-		break;
-	case sf::Keyboard::Scancode::Down:
-		m_downKeyPressed = true;
-		break;
-	}
-}
 
-void Game::onKeyReleased(const sf::Event::KeyReleased& keyReleased)
-{
-	switch (keyReleased.scancode)
-	{
-	case sf::Keyboard::Scancode::Left:
-		m_leftKeyPressed = false;
-		break;
-	case sf::Keyboard::Scancode::Right:
-		m_rightKeyPressed = false;
-		break;
-	case sf::Keyboard::Scancode::Up:
-		m_upKeyPressed = false;
-		break;
-	case sf::Keyboard::Scancode::Down:
-		m_downKeyPressed = false;
-		break;
-	}
-}
+
 
 
