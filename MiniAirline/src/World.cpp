@@ -1,5 +1,6 @@
 #include "World.h"
 #include "SpriteNode.h"
+#include "Arrow.h"
 
 
 #define getRandom() static_cast <float> (rand()) / static_cast <float> (RAND_MAX)
@@ -80,6 +81,7 @@ void World::buildScene()
 	
 		m_SceneLayers[static_cast<int>(Layer::Air)]->attachChild(std::move(aircraft));
 	}
+
 
 }
 

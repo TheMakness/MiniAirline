@@ -21,9 +21,9 @@ struct AircraftMover
 	sf::Vector2f velocity;
 };
 
-struct FindSelectedAircraft
+struct SelectAircraft
 {
-	FindSelectedAircraft(Aircraft*& selectedAircraft, sf::Vector2f mousePos)
+	SelectAircraft(Aircraft*& selectedAircraft, sf::Vector2f mousePos)
 	:m_SelectedAircraft(selectedAircraft)
 	, m_MousePos(mousePos)
 	{
@@ -32,9 +32,10 @@ struct FindSelectedAircraft
 
 	void operator() (Aircraft& aircraft, sf::Time) const
 	{
-		if (aircraft.isSelected(m_MousePos))
+		if (aircraft.isAtMousePos(m_MousePos))
 		{
 			m_SelectedAircraft = &aircraft;
+			m_SelectedAircraft->select();
 		}
 	}
 	
@@ -84,7 +85,7 @@ void Player::handleEvent(const sf::Event& event, CommandQueue& commands, World& 
 			m_PreviousMousePosition = GetRelativeMouseCoordinate;
 			Command c;
 			c.category = Category::Aircraft;
-			c.action = derivedAction<Aircraft>(FindSelectedAircraft(m_SelectedAircraft
+			c.action = derivedAction<Aircraft>(SelectAircraft(m_SelectedAircraft
 				,m_PreviousMousePosition));
 			commands.push(c);
 		}
@@ -94,22 +95,22 @@ void Player::handleEvent(const sf::Event& event, CommandQueue& commands, World& 
 	{
 		if ((mouseButtonRelease->button == sf::Mouse::Button::Left) && m_SelectedAircraft)
 		{
-			auto mouseDeltaPosition = (GetRelativeMouseCoordinate - m_PreviousMousePosition);
-			if (mouseDeltaPosition.length() > 0)
+			auto DeltaPosition = (GetRelativeMouseCoordinate - m_SelectedAircraft->getPosition());
+			if (DeltaPosition.length() > 100)
 			{
-				auto direction = mouseDeltaPosition.normalized();
+				auto direction = DeltaPosition.normalized();
 				m_SelectedAircraft->SetVelocity(direction * (m_SelectedAircraft->getVelocity()).length());
 
 				m_SelectedAircraft->AlignToVelocity();
 			}
 			
-			
+			m_SelectedAircraft->unselect();
 			m_SelectedAircraft = nullptr;
 		}
 	}
 }
 
-void Player::handleRealtimeInput(CommandQueue& commands)
+void Player::handleRealtimeInput(CommandQueue& commands, World& world)
 {
 	// Traverse all assigned keys and check if they are pressed
 	for(auto pair : m_KeyBinding)
@@ -118,6 +119,17 @@ void Player::handleRealtimeInput(CommandQueue& commands)
 		if (sf::Keyboard::isKeyPressed(pair.first) && isRealtimeAction(pair.second))
 			commands.push(m_ActionBinding[pair.second]);
 	}
+
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+	{
+		/*Command c;
+		c.category = Category::Selected;
+		c.action = derivedAction<Aircraft>([&](Aircraft& aircraft,sf::Time) { aircraft.setMousePos(GetRelativeMouseCoordinate);});
+		commands.push(c);*/
+		if (m_SelectedAircraft)
+			m_SelectedAircraft->setMousePos(GetRelativeMouseCoordinate);
+	}
+
 }
 
 void Player::assignKey(Action action, sf::Keyboard::Key key)

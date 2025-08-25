@@ -47,7 +47,7 @@ void Game::processInput()
 			m_Window.close();
 	}
 
-	m_Player.handleRealtimeInput(commands);
+	m_Player.handleRealtimeInput(commands, m_World);
 }
 
 void Game::update(sf::Time deltaTime)

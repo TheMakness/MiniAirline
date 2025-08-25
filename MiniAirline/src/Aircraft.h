@@ -8,6 +8,7 @@
 #include "Entity.h"
 #include "ResourceIdentifiers.h"
 #include "ResourceHolder.h"
+#include "Arrow.h"
 
 
 class Aircraft : public Entity
@@ -22,8 +23,18 @@ public:
 public:
 	explicit Aircraft(Type type, const TextureHolder& textures);
 	virtual void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const;
-	virtual unsigned int	getCategory() const override;
-	bool isSelected(sf::Vector2f mousePos);
+	virtual unsigned int getCategory() const override;
+	bool isSelected();
+	void setDestination(sf::Vector2f destination);
+	void updateArrow(sf::Vector2f targetPosition);
+	bool isAtMousePos(sf::Vector2f mousePos);
+	void select();
+	void unselect();
+	void setMousePos(sf::Vector2f mousePos);
+
+
+private:
+	virtual void updateCurrent(sf::Time deltaTime) override;
 	
 private:
 	Type m_Type;
@@ -31,4 +42,13 @@ private:
 	std::string m_Callsign;
 	sf::Color m_Color;
 	TextureHolder m_Textures;
+
+	sf::Vector2f m_Destination;
+	sf::Vector2f m_CurrentMousePos;
+
+	Category::Type m_CurrentCategory = Category::Aircraft;
+
+	Arrow m_Arrow;
+
+	bool b_Selected = false;
 };

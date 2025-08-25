@@ -23,7 +23,7 @@ public:
 	Player();
 
 	void handleEvent(const sf::Event& event, CommandQueue& commands, World& world);
-	void handleRealtimeInput(CommandQueue& commands);
+	void handleRealtimeInput(CommandQueue& commands, World& world);
 
 	void assignKey(Action action, sf::Keyboard::Key key);
 	sf::Keyboard::Key getAssignedKey(Action action) const;
