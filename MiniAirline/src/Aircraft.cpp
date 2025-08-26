@@ -39,6 +39,8 @@ bool Aircraft::isSelected()
 void Aircraft::setDesiredVelocity(sf::Vector2f destination)
 {
 	m_DesiredVelocity = destination;
+	b_Lerp = false;
+	m_Alpha = 0;
 }
 
 void Aircraft::updateArrow(sf::Vector2f targetPosition)
@@ -81,20 +83,36 @@ void Aircraft::updateCurrent(sf::Time deltaTime)
 	updateArrow(m_Velocity);
 	AlignToVelocity();
 	lerpVelocity(deltaTime);
+
+	if (b_Lerp)
+		m_Arrow.setFillColor(sf::Color::Red);
+	else
+		m_Arrow.setFillColor(sf::Color::White);
 }
 
 void Aircraft::lerpVelocity(sf::Time deltaTime)
 {
-	static float alpha = 0;
-	static sf::Vector2f startVelocity = m_Velocity;
 
-	if (m_Velocity.normalized().dot(m_DesiredVelocity.normalized()) < .999f)
+	float vdot = m_Velocity.normalized().dot(m_DesiredVelocity.normalized());
+
+	if (vdot < .999f)
 	{
-		m_Velocity = Utils::lerp(m_Velocity,m_DesiredVelocity,alpha += m_RotationSpeed * deltaTime.asSeconds());
+		if (!b_Lerp) 
+		{
+			b_Lerp = true;
+			m_PreviousVelocity = m_Velocity;
+			b_SmallTurn = vdot > 0;
+		}
+
+		if(b_SmallTurn)
+			m_Velocity = Utils::lerp(m_PreviousVelocity,m_DesiredVelocity,m_Alpha += m_RotationSpeed * deltaTime.asSeconds());
+		else
+			m_Velocity = Utils::slerp(m_PreviousVelocity, m_DesiredVelocity, m_Alpha += (m_RotationSpeed / 2) * deltaTime.asSeconds());
 	}
 	else
 	{
-		alpha = 0;
+		b_Lerp = false;
+		m_Alpha = 0;
 		m_Velocity = m_DesiredVelocity;
 	}
 }

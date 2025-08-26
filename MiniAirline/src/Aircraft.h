@@ -52,7 +52,12 @@ private:
 	Arrow m_Arrow;
 	sf::CircleShape m_Circle;
 
-	float m_RotationSpeed = .5f;
+	float m_RotationSpeed = .2f;
+
+	sf::Vector2f m_PreviousVelocity;
+	float m_Alpha;
+	bool b_Lerp;
+	bool b_SmallTurn;
 
 	bool b_Selected = false;
 };

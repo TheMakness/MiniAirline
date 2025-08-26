@@ -8,6 +8,7 @@ public:
     explicit Arrow(const sf::Vector2f& startPoint, const sf::Vector2f& endPoint);
     void SetArrowPositionAndRotation(sf::Vector2f tailPos, sf::Vector2f headPos);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override final;
+    void setFillColor(sf::Color color);
 private:
     sf::RectangleShape m_tail;
     sf::ConvexShape m_arrowHead;

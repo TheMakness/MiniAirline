@@ -20,6 +20,13 @@ Arrow::Arrow(const sf::Vector2f& startPoint, const sf::Vector2f& endPoint)
 	target.draw(m_arrowHead);
 }
 
+ void Arrow::setFillColor(sf::Color color)
+ {
+	 m_tail.setFillColor(color);
+	 m_arrowHead.setFillColor(color);
+
+ }
+
  std::size_t Arrow::getPointCount() const
  {
 	 return m_arrowHead.getPointCount() + m_tail.getPointCount();
