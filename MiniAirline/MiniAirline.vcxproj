@@ -165,6 +165,7 @@
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Aircraft.cpp" />
     <ClCompile Include="src\SpriteNode.cpp" />
+    <ClCompile Include="src\Utils.cpp" />
     <ClCompile Include="src\World.cpp" />
     <ClInclude Include="src\Arrow.h" />
     <ClInclude Include="src\Category.h" />
@@ -178,6 +179,7 @@
     </ClInclude>
     <ClCompile Include="src\Waypoint.cpp" />
     <ClInclude Include="src\SpriteNode.h" />
+    <ClInclude Include="src\Utils.h" />
     <ClInclude Include="src\World.h" />
   </ItemGroup>
   <ItemGroup>

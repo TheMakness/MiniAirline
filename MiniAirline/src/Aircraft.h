@@ -25,7 +25,7 @@ public:
 	virtual void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const;
 	virtual unsigned int getCategory() const override;
 	bool isSelected();
-	void setDestination(sf::Vector2f destination);
+	void setDesiredVelocity(sf::Vector2f destination);
 	void updateArrow(sf::Vector2f targetPosition);
 	bool isAtMousePos(sf::Vector2f mousePos);
 	void select();
@@ -35,6 +35,7 @@ public:
 
 private:
 	virtual void updateCurrent(sf::Time deltaTime) override;
+	virtual void lerpVelocity(sf::Time deltaTime);
 	
 private:
 	Type m_Type;
@@ -43,12 +44,15 @@ private:
 	sf::Color m_Color;
 	TextureHolder m_Textures;
 
-	sf::Vector2f m_Destination;
+	sf::Vector2f m_DesiredVelocity;
 	sf::Vector2f m_CurrentMousePos;
 
 	Category::Type m_CurrentCategory = Category::Aircraft;
 
 	Arrow m_Arrow;
+	sf::CircleShape m_Circle;
+
+	float m_RotationSpeed = .5f;
 
 	bool b_Selected = false;
 };

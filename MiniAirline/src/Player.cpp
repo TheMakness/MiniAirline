@@ -99,7 +99,7 @@ void Player::handleEvent(const sf::Event& event, CommandQueue& commands, World& 
 			if (DeltaPosition.length() > 100)
 			{
 				auto direction = DeltaPosition.normalized();
-				m_SelectedAircraft->SetVelocity(direction * (m_SelectedAircraft->getVelocity()).length());
+				m_SelectedAircraft->setDesiredVelocity(direction * (m_SelectedAircraft->getVelocity()).length());
 
 				m_SelectedAircraft->AlignToVelocity();
 			}
@@ -122,10 +122,6 @@ void Player::handleRealtimeInput(CommandQueue& commands, World& world)
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 	{
-		/*Command c;
-		c.category = Category::Selected;
-		c.action = derivedAction<Aircraft>([&](Aircraft& aircraft,sf::Time) { aircraft.setMousePos(GetRelativeMouseCoordinate);});
-		commands.push(c);*/
 		if (m_SelectedAircraft)
 			m_SelectedAircraft->setMousePos(GetRelativeMouseCoordinate);
 	}

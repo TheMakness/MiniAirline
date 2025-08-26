@@ -75,7 +75,8 @@ void World::buildScene()
 	{
 		auto aircraft = std::make_unique<Aircraft>(Aircraft::Type::Civilian, m_Textures);
 		aircraft->setPosition({getRandom() * m_WorldBounds.size.x, getRandom() * m_WorldBounds.size.y});
-		aircraft->SetVelocity((m_WorldBounds.getCenter() - aircraft->getPosition()).normalized() * 100.f);
+		aircraft->SetVelocity((m_WorldBounds.getCenter() - aircraft->getPosition()).normalized() * 200.f);
+		aircraft->setDesiredVelocity(aircraft->getVelocity());
 		aircraft->AlignToVelocity();
 		//aircraft->setPosition({ 967, 526 });
 	
