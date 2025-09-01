@@ -12,8 +12,8 @@ public:
 private:
     sf::RectangleShape m_tail;
     sf::ConvexShape m_arrowHead;
-    const sf::Vector2f c_arrowHeadSize{ 50.f, 50.f };
-    const float c_arrowTailYSize = 10.f;
+    const sf::Vector2f c_arrowHeadSize{ 20.f, 20.f };
+    const float c_arrowTailYSize = 5.f;
 
     sf::Vector2f m_tailSize;
 

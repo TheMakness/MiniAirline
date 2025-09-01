@@ -159,6 +159,8 @@
     <ClCompile Include="src\Command.cpp" />
     <ClCompile Include="src\CommandQueue.cpp" />
     <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\RectangleShapeNode.cpp" />
+    <ClCompile Include="src\Runway.cpp" />
     <ClCompile Include="src\SceneNode.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Game.cpp" />
@@ -172,6 +174,8 @@
     <ClInclude Include="src\Command.h" />
     <ClInclude Include="src\CommandQueue.h" />
     <ClInclude Include="src\Player.h" />
+    <ClInclude Include="src\RectangleShapeNode.h" />
+    <ClInclude Include="src\Runway.h" />
     <ClInclude Include="src\SceneNode.h" />
     <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\ResourceHolder.inl">

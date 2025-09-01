@@ -1,6 +1,8 @@
 #include "World.h"
 #include "SpriteNode.h"
 #include "Arrow.h"
+#include "RectangleShapeNode.h"
+#include "Runway.h"
 
 
 #define getRandom() static_cast <float> (rand()) / static_cast <float> (RAND_MAX)
@@ -11,7 +13,7 @@ World::World(sf::RenderWindow& window) :
 	, m_Textures()
 	, m_SceneGraph()
 	, m_SceneLayers()
-	, m_WorldBounds({ 0,0 } ,{ m_WorldView.getSize().x * 10,m_WorldView.getSize().y * 10 })
+	, m_WorldBounds({ 0,0 } ,{ m_WorldView.getSize().x * 2,m_WorldView.getSize().y * 2 })
 	, m_SpawnPosition(m_WorldView.getSize().x / 2, m_WorldView.getSize().y / 2)
 {
 	loadTextures();
@@ -45,7 +47,7 @@ const sf::RenderWindow& World::getRenderWindow() const
 void World::loadTextures()
 {
 	m_Textures.load(Textures::ID::Airplane, "media/textures/Plane.png");
-	m_Textures.load(Textures::ID::Landscape, "media/textures/Desert.png");
+	m_Textures.load(Textures::ID::Landscape, "media/textures/Map.png");
 }
 
 void World::buildScene()
@@ -61,24 +63,51 @@ void World::buildScene()
 	//Tiled background texture
 	sf::Texture& texture = m_Textures.get(Textures::ID::Landscape);
 	sf::IntRect textureRect(m_WorldBounds);
-	texture.setRepeated(true);
+	
+	//texture.setRepeated(true);
 
 	//Init sprite node that contains background texture
 	
-	auto backgroundSprite = std::make_unique<SpriteNode>(texture, textureRect);
-	backgroundSprite->setPosition({ m_WorldBounds.position.x, m_WorldBounds.position.y });
+
+	//////// Replace background sprite by solid color
+
+	//auto backgroundSprite = std::make_unique<SpriteNode>(texture, textureRect);
+	//const sf::FloatRect bounds = backgroundSprite->getSprite().getLocalBounds();
+	//sf::Sprite& bgSprite = const_cast<sf::Sprite&>(backgroundSprite->getSprite());
+	////backgroundSprite->setScale({ 100,100 });
+	////bgSprite.setOrigin(bounds.getCenter());
+	//backgroundSprite->setPosition({ m_WorldBounds.position.x, m_WorldBounds.position.y});
+	//m_SceneLayers[static_cast<int>(Layer::Background)]
+	//	->attachChild(std::move(backgroundSprite));
+
+	auto backgroundRect = std::make_unique<RectangleShapeNode>(RectangleShapeNode(
+		{ m_WorldBounds.size.x, m_WorldBounds.size.y }
+		, {m_WorldBounds.position.x, m_WorldBounds.position.y}));
+
+	backgroundRect->setFillColor({ 25,25,25,255 });
 	m_SceneLayers[static_cast<int>(Layer::Background)]
-		->attachChild(std::move(backgroundSprite));
+		->attachChild(std::move(backgroundRect));
+
+	//Init Runway
+
+    auto runway = std::make_unique<Runway>(
+        sf::Vector2f{ 600,100 },
+        sf::Vector2f{ m_WorldBounds.getCenter().x, m_WorldBounds.getCenter().y },
+        sf::degrees(45)
+    );
+
+    m_SceneLayers[static_cast<int>(Layer::Ground)]
+        ->attachChild(std::move(runway));
 
 	//Init planes
 	for (size_t i = 0; i < 5; i++)
 	{
 		auto aircraft = std::make_unique<Aircraft>(Aircraft::Type::Civilian, m_Textures);
 		aircraft->setPosition({getRandom() * m_WorldBounds.size.x, getRandom() * m_WorldBounds.size.y});
-		aircraft->SetVelocity((m_WorldBounds.getCenter() - aircraft->getPosition()).normalized() * 200.f);
+		aircraft->SetVelocity((m_WorldBounds.getCenter() - aircraft->getPosition()).normalized() * 50.f);
 		aircraft->setDesiredVelocity(aircraft->getVelocity());
 		aircraft->AlignToVelocity();
-		//aircraft->setPosition({ 967, 526 });
+		aircraft->setScale({ 0.3f, 0.3f });
 	
 		m_SceneLayers[static_cast<int>(Layer::Air)]->attachChild(std::move(aircraft));
 	}

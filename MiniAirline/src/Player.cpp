@@ -6,20 +6,6 @@
 
 #define GetRelativeMouseCoordinate world.getRenderWindow().mapPixelToCoords(sf::Mouse::getPosition(world.getRenderWindow()))
 
-struct AircraftMover
-{
-	AircraftMover(float vx, float vy)
-		: velocity(vx, vy)
-	{
-	}
-
-	void operator() (Aircraft& aircraft, sf::Time) const
-	{
-		aircraft.accelerate(velocity);
-	}
-
-	sf::Vector2f velocity;
-};
 
 struct SelectAircraft
 {
@@ -68,13 +54,12 @@ void Player::handleEvent(const sf::Event& event, CommandQueue& commands, World& 
 	{
 		// Check if pressed key appears in key binding, trigger command if so
 		auto found = m_KeyBinding.find(keyPressed->code);
-		if (found->second == ZoomIn)
+		if (found != m_KeyBinding.end() && found->second == ZoomIn)
 			world.zoomIn();
-		else if(found->second == ZoomOut)
+		else if (found != m_KeyBinding.end() && found->second == ZoomOut)
 			world.zoomOut();
 		else if (found != m_KeyBinding.end() && !isRealtimeAction(found->second))
-				commands.push(m_ActionBinding[found->second]);
-		
+			commands.push(m_ActionBinding[found->second]);
 
 	}
 
@@ -155,11 +140,7 @@ sf::Keyboard::Key Player::getAssignedKey(Action action) const
 
 void Player::initializeActions()
 {
-	const float playerSpeed = 200.f;
-	m_ActionBinding[MoveLeft].action = derivedAction<Aircraft>(AircraftMover(-playerSpeed, 0.f));
-	m_ActionBinding[MoveRight].action = derivedAction<Aircraft>(AircraftMover(+playerSpeed, 0.f));
-	m_ActionBinding[MoveUp].action = derivedAction<Aircraft>(AircraftMover(0.f, -playerSpeed));
-	m_ActionBinding[MoveDown].action = derivedAction<Aircraft>(AircraftMover(0.f, +playerSpeed));
+	
 }
 
 bool Player::isRealtimeAction(Action action)

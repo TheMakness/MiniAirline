@@ -30,7 +30,7 @@ unsigned int Aircraft::getCategory() const
 	return Category::Aircraft;
 }
 
-bool Aircraft::isSelected()
+bool Aircraft::isSelected() const
 {
 	return b_Selected;
 }
@@ -46,11 +46,11 @@ void Aircraft::setDesiredVelocity(sf::Vector2f destination)
 void Aircraft::updateArrow(sf::Vector2f targetPosition)
 {
 	if (!b_Selected || (m_CurrentMousePos - getPosition()).length() < 100.f)
-		m_Arrow.SetArrowPositionAndRotation(getPosition(), getPosition() + (500.f * m_Velocity.normalized()));
+		m_Arrow.SetArrowPositionAndRotation(getPosition(), getPosition() + (200.f * m_Velocity.normalized()));
 	else
 	{
 		sf::Vector2f mouseDir = (m_CurrentMousePos - getPosition()).normalized();
-		m_Arrow.SetArrowPositionAndRotation(getPosition(), getPosition() + (500.f * mouseDir));
+		m_Arrow.SetArrowPositionAndRotation(getPosition(), getPosition() + (200.f * mouseDir));
 	}
 }
 
@@ -107,7 +107,7 @@ void Aircraft::lerpVelocity(sf::Time deltaTime)
 		if(b_SmallTurn)
 			m_Velocity = Utils::lerp(m_PreviousVelocity,m_DesiredVelocity,m_Alpha += m_RotationSpeed * deltaTime.asSeconds());
 		else
-			m_Velocity = Utils::slerp(m_PreviousVelocity, m_DesiredVelocity, m_Alpha += (m_RotationSpeed / 2) * deltaTime.asSeconds());
+			m_Velocity = Utils::slerp(m_PreviousVelocity, m_DesiredVelocity, m_Alpha += (m_RotationSpeed / 3) * deltaTime.asSeconds());
 	}
 	else
 	{

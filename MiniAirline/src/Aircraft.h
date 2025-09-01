@@ -24,7 +24,7 @@ public:
 	explicit Aircraft(Type type, const TextureHolder& textures);
 	virtual void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const;
 	virtual unsigned int getCategory() const override;
-	bool isSelected();
+	bool isSelected() const;
 	void setDesiredVelocity(sf::Vector2f destination);
 	void updateArrow(sf::Vector2f targetPosition);
 	bool isAtMousePos(sf::Vector2f mousePos);
@@ -52,12 +52,13 @@ private:
 	Arrow m_Arrow;
 	sf::CircleShape m_Circle;
 
-	float m_RotationSpeed = .2f;
+	float m_RotationSpeed = .5f;
 
 	sf::Vector2f m_PreviousVelocity;
-	float m_Alpha;
-	bool b_Lerp;
-	bool b_SmallTurn;
+
+	float m_Alpha = 0;
+	bool b_Lerp = false;
+	bool b_SmallTurn = false;
 
 	bool b_Selected = false;
 };
