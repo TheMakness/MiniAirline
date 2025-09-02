@@ -24,6 +24,11 @@ SceneNode::Ptr SceneNode::detachChild(const SceneNode& node)
 		return result;
 }
 
+std::vector<SceneNode::Ptr>& SceneNode::getChildren()
+{
+	return m_Children;
+}
+
 void SceneNode::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	//Apply transform of current node

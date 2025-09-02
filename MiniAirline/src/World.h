@@ -20,6 +20,7 @@ public:
 
 	const sf::View& getView() const;
 	const sf::RenderWindow& getRenderWindow() const;
+	bool collisionCheck() const;
 
 private:
 	enum class Layer

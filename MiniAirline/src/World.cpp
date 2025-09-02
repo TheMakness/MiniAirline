@@ -44,6 +44,30 @@ const sf::RenderWindow& World::getRenderWindow() const
 	return m_Window;
 }
 
+bool World::collisionCheck() const
+{
+	//Perfom collision Check only on Air layer
+
+	for (auto& node : m_SceneLayers[static_cast<int>(Layer::Air)]->getChildren())
+	{
+		if (node->getCategory() == Category::Aircraft)
+		{
+			Aircraft* a = dynamic_cast<Aircraft*>(node.get());
+			sf::Vector2f position = a->getPosition();
+
+			for(auto& otherNode : m_SceneLayers[static_cast<int>(Layer::Air)]->getChildren())
+			{
+				if (node == otherNode)
+					continue;
+				if ((position - otherNode->getPosition()).length() < 50.f)
+					return true;
+			}
+		}
+	}
+
+	return false;
+}
+
 void World::loadTextures()
 {
 	m_Textures.load(Textures::ID::Airplane, "media/textures/Plane.png");
@@ -60,26 +84,7 @@ void World::buildScene()
 		m_SceneGraph.attachChild(std::move(layer));
 	}
 
-	//Tiled background texture
-	sf::Texture& texture = m_Textures.get(Textures::ID::Landscape);
-	sf::IntRect textureRect(m_WorldBounds);
-	
-	//texture.setRepeated(true);
-
-	//Init sprite node that contains background texture
-	
-
-	//////// Replace background sprite by solid color
-
-	//auto backgroundSprite = std::make_unique<SpriteNode>(texture, textureRect);
-	//const sf::FloatRect bounds = backgroundSprite->getSprite().getLocalBounds();
-	//sf::Sprite& bgSprite = const_cast<sf::Sprite&>(backgroundSprite->getSprite());
-	////backgroundSprite->setScale({ 100,100 });
-	////bgSprite.setOrigin(bounds.getCenter());
-	//backgroundSprite->setPosition({ m_WorldBounds.position.x, m_WorldBounds.position.y});
-	//m_SceneLayers[static_cast<int>(Layer::Background)]
-	//	->attachChild(std::move(backgroundSprite));
-
+	//Init Background
 	auto backgroundRect = std::make_unique<RectangleShapeNode>(RectangleShapeNode(
 		{ m_WorldBounds.size.x, m_WorldBounds.size.y }
 		, {m_WorldBounds.position.x, m_WorldBounds.position.y}));
@@ -100,7 +105,7 @@ void World::buildScene()
         ->attachChild(std::move(runway));
 
 	//Init planes
-	for (size_t i = 0; i < 5; i++)
+	for (size_t i = 0; i < 4; i++)
 	{
 		auto aircraft = std::make_unique<Aircraft>(Aircraft::Type::Civilian, m_Textures);
 		aircraft->setPosition({getRandom() * m_WorldBounds.size.x, getRandom() * m_WorldBounds.size.y});
@@ -120,7 +125,7 @@ void World::update(sf::Time deltaTime)
 	while (!m_CommandQueue.isEmpty())
 		m_SceneGraph.onCommand(m_CommandQueue.pop(), deltaTime);
 	m_SceneGraph.update(deltaTime);
-
+	bool col = collisionCheck();
 }
 
 void World::zoomIn()

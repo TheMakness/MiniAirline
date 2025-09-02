@@ -76,6 +76,11 @@ void Aircraft::setMousePos(sf::Vector2f mousePos)
 	m_CurrentMousePos = mousePos;
 }
 
+sf::FloatRect Aircraft::getGlobalBounds()
+{
+	return m_Sprite.getGlobalBounds();
+}
+
 void Aircraft::updateCurrent(sf::Time deltaTime)
 {
 	

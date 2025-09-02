@@ -35,7 +35,12 @@ const sf::Vector2f& Entity::getVelocity() const
 
 void Entity::updateCurrent(sf::Time deltaTime)
 {
-		move(m_Velocity * deltaTime.asSeconds());
+	move(m_Velocity * deltaTime.asSeconds());
+}
+
+sf::FloatRect Entity::getGlobalBounds()
+{
+	return sf::FloatRect();
 }
 
 

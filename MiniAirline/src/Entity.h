@@ -15,6 +15,7 @@ public:
 	void accelerate(sf::Vector2f velocity);
 	const sf::Vector2f& getVelocity() const;
 	virtual void updateCurrent(sf::Time deltaTime) override;
+	virtual sf::FloatRect getGlobalBounds();
 
 	
 protected:

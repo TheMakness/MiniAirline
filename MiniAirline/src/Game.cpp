@@ -7,10 +7,6 @@ const sf::Time TimePerFrame = sf::seconds(1.f / 60.f);
 
 Game::Game()
 	: m_Window(sf::VideoMode({ 1920, 1080 }), "SFML Application")
-	, m_leftKeyPressed(false)
-	, m_rightKeyPressed(false)
-	, m_upKeyPressed(false)
-	, m_downKeyPressed(false)
 	, m_World(m_Window)
 	, m_Player()
 {
@@ -61,6 +57,8 @@ void Game::render()
 	m_World.draw();
 	m_Window.display();
 }
+
+
 
 
 

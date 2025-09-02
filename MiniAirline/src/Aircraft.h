@@ -31,6 +31,7 @@ public:
 	void select();
 	void unselect();
 	void setMousePos(sf::Vector2f mousePos);
+	sf::FloatRect getGlobalBounds() override;
 
 
 private:

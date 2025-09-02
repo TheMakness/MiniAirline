@@ -22,6 +22,8 @@ public:
 	void attachChild(Ptr child);
 	Ptr detachChild(const SceneNode& node);
 
+	std::vector<Ptr>& getChildren();
+
 private:
 	// Inherited via Drawable
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override final;

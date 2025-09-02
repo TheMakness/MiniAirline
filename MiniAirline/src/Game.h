@@ -18,6 +18,5 @@ private:
 private:
 	sf::RenderWindow m_Window;
 	World m_World;
-	bool m_upKeyPressed, m_downKeyPressed, m_leftKeyPressed, m_rightKeyPressed;
 	Player m_Player;
 };
