@@ -9,8 +9,10 @@ Game::Game()
 	: m_Window(sf::VideoMode({ 1920, 1080 }), "SFML Application")
 	, m_World(m_Window)
 	, m_Player()
+	,m_CurrentState(State::Game)
 {
 	m_Window.setVerticalSyncEnabled(true);
+	
 }
 
 void Game::run()
@@ -24,13 +26,62 @@ void Game::run()
 		{
 			timeSinceLastUpdate -= TimePerFrame;
 			processInput();
-			update(TimePerFrame);
+			UpdateState(TimePerFrame);
 		}
 		render();
 	}
 }
 
-void Game::processInput()
+Game* Game::getInstance()
+{
+	if (!s_Instance)
+		s_Instance = new Game;
+	return s_Instance;
+}
+
+ void Game::UpdateState(sf::Time deltaTime)
+ {
+	 switch (m_CurrentState)
+	 {
+	 case State::Game: update(deltaTime);
+	 	break;
+
+	 case State::Pause:
+	 	break;
+
+	 case State::GameOver:
+		break;
+	 default: ;
+	 }
+ }
+
+ void Game::SwitchState(State newState)
+ {
+	 m_CurrentState = newState;
+	 OnEnterState(newState);
+ }
+
+void Game::OnEnterState(State enterState)
+{
+	switch (m_CurrentState)
+	{
+		case State::Game:
+			break;
+		case State::Pause:
+		break;
+		case State::GameOver:
+			printf("Game Over !");
+		break;	
+	}
+}
+
+
+ const State& Game::getCurrentState() const
+ {
+	 return m_CurrentState;
+ }
+
+ void Game::processInput()
 {
 
 	CommandQueue& commands = m_World.getCommandQueue();
