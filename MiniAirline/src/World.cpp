@@ -1,11 +1,12 @@
 #include "World.h"
 #include "SpriteNode.h"
 #include "Arrow.h"
+#include "Game.h"
 #include "RectangleShapeNode.h"
 #include "Runway.h"
 
 
-#define getRandom() static_cast <float> (rand()) / static_cast <float> (RAND_MAX)
+
 
 World::World(sf::RenderWindow& window) :
 	m_Window(window)
@@ -16,11 +17,12 @@ World::World(sf::RenderWindow& window) :
 	, m_WorldBounds({ 0,0 } ,{ m_WorldView.getSize().x * 2,m_WorldView.getSize().y * 2 })
 	, m_SpawnPosition(m_WorldView.getSize().x / 2, m_WorldView.getSize().y / 2)
 {
+	m_WorldView.setCenter(m_WorldBounds.getCenter());
+	
+
 	loadTextures();
 	buildScene();
-
-	m_WorldView.setCenter(m_WorldBounds.getCenter());
-	//m_WorldView.zoom(2.f);
+	m_WorldView.zoom(2.f);
 }
 
 void World::draw()
@@ -68,6 +70,27 @@ bool World::collisionCheck() const
 	return false;
 }
 
+bool World::isInBorder() const
+{
+	for (auto& node : m_SceneLayers[static_cast<int>(Layer::Air)]->getChildren())
+	{
+		if (node->getCategory() == Category::Aircraft)
+		{
+			Aircraft* a = dynamic_cast<Aircraft*>(node.get());
+			sf::Vector2f position = a->getPosition();
+			//check if in view
+			sf::FloatRect viewRect(
+				m_WorldView.getCenter() - m_WorldView.getSize() / 2.f,
+				m_WorldView.getSize()
+			);
+			if (!viewRect.contains(position))
+				return false;
+		}
+		return true;
+	}
+
+}
+
 void World::loadTextures()
 {
 	m_Textures.load(Textures::ID::Airplane, "media/textures/Plane.png");
@@ -108,7 +131,18 @@ void World::buildScene()
 	for (size_t i = 0; i < 4; i++)
 	{
 		auto aircraft = std::make_unique<Aircraft>(Aircraft::Type::Civilian, m_Textures);
-		aircraft->setPosition({getRandom() * m_WorldBounds.size.x, getRandom() * m_WorldBounds.size.y});
+
+		srand(i * time(0));
+
+		float randX =  rand() % 100 / 100.f;
+		float randY =  rand() % 100 / 100.f;
+
+		randX = randX * (m_WorldView.getSize().x * 2) - m_WorldView.getSize().x;
+		randY = randY * (m_WorldView.getSize().y * 2) - m_WorldView.getSize().y;
+
+		sf::Vector2f pos = {randX + m_WorldBounds.getCenter().x, randY + m_WorldBounds.getCenter().y};
+
+		aircraft->setPosition(pos);
 		aircraft->SetVelocity((m_WorldBounds.getCenter() - aircraft->getPosition()).normalized() * 50.f);
 		aircraft->setDesiredVelocity(aircraft->getVelocity());
 		aircraft->AlignToVelocity();
@@ -125,7 +159,13 @@ void World::update(sf::Time deltaTime)
 	while (!m_CommandQueue.isEmpty())
 		m_SceneGraph.onCommand(m_CommandQueue.pop(), deltaTime);
 	m_SceneGraph.update(deltaTime);
-	bool col = collisionCheck();
+
+	//Check game over conditions
+
+	if (collisionCheck())
+		Game::getInstance()->SwitchState(State::GameOver);
+	if (!isInBorder())
+		Game::getInstance()->SwitchState(State::GameOver);
 }
 
 void World::zoomIn()

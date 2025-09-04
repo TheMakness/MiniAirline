@@ -6,8 +6,7 @@ int main()
 
 	try 
 	{
-		Game game;
-		game.run();
+		Game::getInstance()->run();
 	}
     catch (std::exception& e)
     {

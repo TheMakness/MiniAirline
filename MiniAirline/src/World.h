@@ -22,6 +22,8 @@ public:
 	const sf::RenderWindow& getRenderWindow() const;
 	bool collisionCheck() const;
 
+	bool isInBorder() const;
+
 private:
 	enum class Layer
 	{
