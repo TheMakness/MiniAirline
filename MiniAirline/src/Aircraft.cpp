@@ -5,7 +5,8 @@
 Aircraft::Aircraft(Type type, const TextureHolder& textures) :
 	m_Type(type),
 	m_Sprite(textures.get(Textures::ID::Airplane)),
-	m_Arrow({ 0,0 }, { 0,0 })
+	m_Arrow({ 0,0 }, { 0,0 }),
+	m_CurrentState(State::Spawning)
 {
 	sf::FloatRect bounds = m_Sprite.getLocalBounds();
 	m_Sprite.setOrigin(bounds.getCenter());
@@ -14,7 +15,7 @@ Aircraft::Aircraft(Type type, const TextureHolder& textures) :
 	m_Circle.setRadius(100.f);
 	m_Circle.setOutlineThickness(10.f);
 	m_Circle.setOutlineColor(sf::Color::Blue);
-	m_Circle.setFillColor({ 0,0,0,0 });
+	m_Circle.setFillColor({ 255,0,0,255 });
 	m_Circle.setOrigin(m_Circle.getGeometricCenter());
 }
 
@@ -81,18 +82,61 @@ sf::FloatRect Aircraft::getGlobalBounds()
 	return m_Sprite.getGlobalBounds();
 }
 
+void Aircraft::switchState(State newState)
+{
+	if (m_CurrentState != newState)
+	{
+		m_CurrentState = newState;
+		onEnterState(newState);
+	}
+}
+
+void Aircraft::onEnterState(State enterState)
+{
+	switch (m_CurrentState)
+	{
+		//swich on different states
+	case State::Flying:
+		m_Circle.setFillColor({ 0,0,0,0 });
+			break;
+	}
+}
+
 void Aircraft::updateCurrent(sf::Time deltaTime)
 {
-	
-	Entity::updateCurrent(deltaTime);
-	updateArrow(m_Velocity);
-	AlignToVelocity();
-	lerpVelocity(deltaTime);
 
-	if (b_Lerp)
-		m_Arrow.setFillColor(sf::Color::Red);
-	else
-		m_Arrow.setFillColor(sf::Color::White);
+	switch(m_CurrentState)
+	{
+		case State::Flying:
+			Entity::updateCurrent(deltaTime);
+			updateArrow(m_Velocity);
+			AlignToVelocity();
+			lerpVelocity(deltaTime);
+			if (b_Lerp)
+				m_Arrow.setFillColor(sf::Color::Red);
+			else
+				m_Arrow.setFillColor(sf::Color::White);
+			break;
+		case State::Landing:
+			break;
+		case State::TakingOff:
+			break;
+		case State::Spawning:
+			Entity::updateCurrent(deltaTime);
+			updateArrow(m_Velocity);
+			AlignToVelocity();
+			lerpVelocity(deltaTime);
+			if (b_Lerp)
+				m_Arrow.setFillColor(sf::Color::Red);
+			else
+				m_Arrow.setFillColor(sf::Color::White);
+			break;
+
+
+	}
+
+
+	
 }
 
 void Aircraft::lerpVelocity(sf::Time deltaTime)

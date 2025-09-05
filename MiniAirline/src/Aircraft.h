@@ -20,6 +20,16 @@ public:
 		Military,
 	};
 
+
+	enum class State {
+		Flying,
+		Landing,
+		TakingOff,
+		Spawning
+	};
+
+
+
 public:
 	explicit Aircraft(Type type, const TextureHolder& textures);
 	virtual void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -32,6 +42,11 @@ public:
 	void unselect();
 	void setMousePos(sf::Vector2f mousePos);
 	sf::FloatRect getGlobalBounds() override;
+
+	void switchState(State newState);
+	void onEnterState(State enterState);
+	State getCurrentState() const { return m_CurrentState; }
+
 
 
 private:
@@ -62,4 +77,7 @@ private:
 	bool b_SmallTurn = false;
 
 	bool b_Selected = false;
+
+	private:
+	State m_CurrentState;
 };

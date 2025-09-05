@@ -57,6 +57,10 @@ bool World::collisionCheck() const
 			Aircraft* a = dynamic_cast<Aircraft*>(node.get());
 			sf::Vector2f position = a->getPosition();
 
+			if (a->getCurrentState() == Aircraft::State::Spawning
+				|| a->getCurrentState() == Aircraft::State::TakingOff)
+				continue;
+
 			for(auto& otherNode : m_SceneLayers[static_cast<int>(Layer::Air)]->getChildren())
 			{
 				if (node == otherNode)
@@ -74,21 +78,33 @@ bool World::isInBorder() const
 {
 	for (auto& node : m_SceneLayers[static_cast<int>(Layer::Air)]->getChildren())
 	{
+
+
 		if (node->getCategory() == Category::Aircraft)
 		{
 			Aircraft* a = dynamic_cast<Aircraft*>(node.get());
+
 			sf::Vector2f position = a->getPosition();
+
 			//check if in view
 			sf::FloatRect viewRect(
 				m_WorldView.getCenter() - m_WorldView.getSize() / 2.f,
 				m_WorldView.getSize()
 			);
 			if (!viewRect.contains(position))
-				return false;
+			{
+				if (a->getCurrentState() != Aircraft::State::Spawning)
+					return false;
+			}
+			else if(a->getCurrentState() == Aircraft::State::Spawning)
+			{
+				a->switchState(Aircraft::State::Flying);
+			}
+				
 		}
-		return true;
+		
 	}
-
+	return true;
 }
 
 void World::loadTextures()
@@ -127,6 +143,9 @@ void World::buildScene()
     m_SceneLayers[static_cast<int>(Layer::Ground)]
         ->attachChild(std::move(runway));
 
+	//TODO : Replace logic with spawner class
+	//TODO : Add more planes over time
+
 	//Init planes
 	for (size_t i = 0; i < 4; i++)
 	{
@@ -137,10 +156,13 @@ void World::buildScene()
 		float randX =  rand() % 100 / 100.f;
 		float randY =  rand() % 100 / 100.f;
 
-		randX = randX * (m_WorldView.getSize().x * 2) - m_WorldView.getSize().x;
-		randY = randY * (m_WorldView.getSize().y * 2) - m_WorldView.getSize().y;
 
-		sf::Vector2f pos = {randX + m_WorldBounds.getCenter().x, randY + m_WorldBounds.getCenter().y};
+		randX = randX * (m_WorldBounds.size.x * 2) - m_WorldBounds.size.x;
+		randY = randY * (m_WorldBounds.size.y * 2) - m_WorldBounds.size.y;
+
+		//TODO : Make sure planes spawn outside of view according to zoom level
+
+		sf::Vector2f pos = {randX + m_WorldBounds.getCenter().x + m_WorldView.getSize().x, randY + m_WorldBounds.getCenter().y + m_WorldView.getSize().y};
 
 		aircraft->setPosition(pos);
 		aircraft->SetVelocity((m_WorldBounds.getCenter() - aircraft->getPosition()).normalized() * 50.f);

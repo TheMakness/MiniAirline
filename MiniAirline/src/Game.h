@@ -34,9 +34,6 @@ public:
 
 	const State& getCurrentState() const;
 
-public:
-
-
 protected:
 	Game();
 
