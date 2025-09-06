@@ -11,6 +11,9 @@ class ResourceHolder
 public:
 	void load(Identifier id, const std::string& filename);
 
+	//TODO remove temporary overload for font loading
+	void loadFont(Identifier id, const std::string& filename);
+
 	template <typename Parameter>
 	void load(Identifier id, const std::string& filename, const Parameter& secondParam);
 

@@ -3,6 +3,7 @@
 namespace sf
 {
 	class Texture;
+	class Font;
 }
 
 namespace Textures
@@ -15,9 +16,18 @@ namespace Textures
 	};
 }
 
+namespace Font
+{
+	enum class ID
+	{
+		Vercetti_Regular,
+	};
+}
+
 
 // Forward declaration and a few type definitions
 template <typename Resource, typename Identifier>
 class ResourceHolder;
 
 typedef ResourceHolder<sf::Texture, Textures::ID> TextureHolder;
+typedef ResourceHolder<sf::Font, Font::ID> FontHolder;

@@ -1,3 +1,4 @@
+#include "ResourceHolder.h"
 
 template <typename Resource, typename Identifier>
 void ResourceHolder<Resource, Identifier>::load(Identifier id, const std::string& filename)
@@ -6,6 +7,16 @@ void ResourceHolder<Resource, Identifier>::load(Identifier id, const std::string
 	if (!resource->loadFromFile(filename))
 		throw std::runtime_error("ResourceHolder::load - Failed to load " + filename);
 
+	auto inserted = m_ResourceMap.insert(std::make_pair(id, std::move(resource)));
+	assert(inserted.second);
+}
+
+template<typename Resource, typename Identifier>
+inline void ResourceHolder<Resource, Identifier>::loadFont(Identifier id, const std::string& filename)
+{
+	std::unique_ptr<Resource> resource(new Resource);
+	if (!resource->openFromFile(filename))
+		throw std::runtime_error("ResourceHolder::load - Failed to load " + filename);
 	auto inserted = m_ResourceMap.insert(std::make_pair(id, std::move(resource)));
 	assert(inserted.second);
 }
@@ -22,6 +33,10 @@ inline void ResourceHolder<Resource, Identifier>::load(Identifier id, const std:
 	auto inserted = m_ResourceMap.insert(std::make_pair(id, std::move(resource)));
 	assert(inserted.second);
 }
+
+
+
+
 
 template <typename Resource, typename Identifier>
 Resource& ResourceHolder<Resource, Identifier>::get(Identifier id)
