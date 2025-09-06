@@ -158,6 +158,8 @@
     <ClCompile Include="src\Arrow.cpp" />
     <ClCompile Include="src\Command.cpp" />
     <ClCompile Include="src\CommandQueue.cpp" />
+    <ClCompile Include="src\GameDebugData.cpp" />
+    <ClCompile Include="src\PlaneDebugData.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\RectangleShapeNode.cpp" />
     <ClCompile Include="src\Runway.cpp" />
@@ -167,12 +169,15 @@
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Aircraft.cpp" />
     <ClCompile Include="src\SpriteNode.cpp" />
+    <ClCompile Include="src\TextNode.cpp" />
     <ClCompile Include="src\Utils.cpp" />
     <ClCompile Include="src\World.cpp" />
     <ClInclude Include="src\Arrow.h" />
     <ClInclude Include="src\Category.h" />
     <ClInclude Include="src\Command.h" />
     <ClInclude Include="src\CommandQueue.h" />
+    <ClInclude Include="src\GameDebugData.h" />
+    <ClInclude Include="src\PlaneDebugData.h" />
     <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\RectangleShapeNode.h" />
     <ClInclude Include="src\Runway.h" />
@@ -183,6 +188,7 @@
     </ClInclude>
     <ClCompile Include="src\Waypoint.cpp" />
     <ClInclude Include="src\SpriteNode.h" />
+    <ClInclude Include="src\TextNode.h" />
     <ClInclude Include="src\Utils.h" />
     <ClInclude Include="src\World.h" />
   </ItemGroup>

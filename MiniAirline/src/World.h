@@ -10,11 +10,14 @@ class World
 {
 
 public:
+	void loadFont();
 	explicit World(sf::RenderWindow& window);
 	void update(sf::Time deltaTime);
 	void zoomIn();
 	void zoomOut();
 	void draw();
+
+	void initDebug();
 
 	CommandQueue& getCommandQueue();
 
@@ -30,6 +33,7 @@ private:
 		Background,
 		Ground,
 		Air,
+		Debug,
 		LayerCount
 	};
 
@@ -37,6 +41,7 @@ private:
 	sf::RenderWindow& m_Window;
 	sf::View m_WorldView;
 	TextureHolder m_Textures;
+	FontHolder m_fontHolder;
 
 	SceneNode m_SceneGraph;
 	std::array<SceneNode*, static_cast<int>(Layer::LayerCount)> m_SceneLayers;

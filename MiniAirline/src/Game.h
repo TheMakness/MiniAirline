@@ -6,15 +6,26 @@
 
 class Game;
 
- enum class State
+enum class State
 {
 	Game,
 	Pause,
 	GameOver
 };
 
+static inline std::string toString(State state) {
+	static const std::unordered_map<State, std::string> stateNames{
+		{ State::Game, "Game" },
+		{ State::Pause, "Pause" },
+		{ State::GameOver, "GameOver" }
+	};
 
- static Game* s_Instance;
+	if (auto it = stateNames.find(state); it != stateNames.end())
+		return it->second;
+
+	return "Unknown";
+}
+
 
 class Game
 {
@@ -25,17 +36,19 @@ public:
 	void run();
 	static Game* getInstance();
 
-	Game(Game& other) = delete;
-	void operator=(const Game&) = delete;
-
 	void UpdateState(sf::Time deltaTime);
 	void SwitchState(State newState);
 	void OnEnterState(State enterState);
 
-	const State& getCurrentState() const;
+	const State getCurrentState() const;
 
-protected:
+	
+	Game(const Game&) = delete;
+	Game& operator=(const Game&) = delete;
+
+private:
 	Game();
+	
 
 private:
 	void processInput();
@@ -47,5 +60,6 @@ private:
 	World m_World;
 	Player m_Player;
 	State m_CurrentState;
+	FontHolder m_Fonts;
 	
 };

@@ -3,16 +3,15 @@
 
 
 const sf::Time TimePerFrame = sf::seconds(1.f / 60.f);
-
+static Game* s_Instance = nullptr;
 
 Game::Game()
 	: m_Window(sf::VideoMode({ 1920, 1080 }), "SFML Application")
 	, m_World(m_Window)
-	, m_Player()
 	,m_CurrentState(State::Game)
 {
 	m_Window.setVerticalSyncEnabled(true);
-	
+	m_Fonts.loadFont(Font::ID::Vercetti_Regular, "media/fonts/Vercetti-Regular.ttf");
 }
 
 void Game::run()
@@ -34,10 +33,13 @@ void Game::run()
 
 Game* Game::getInstance()
 {
-	if (!s_Instance)
-		s_Instance = new Game;
+	if (s_Instance == nullptr)
+	{
+		s_Instance = new Game();
+	}
 	return s_Instance;
 }
+
 
  void Game::UpdateState(sf::Time deltaTime)
  {
@@ -49,7 +51,7 @@ Game* Game::getInstance()
 	 case State::Pause:
 	 	break;
 
-	 case State::GameOver:
+	 case State::GameOver:update(deltaTime);
 		break;
 	 default: ;
 	 }
@@ -76,10 +78,11 @@ void Game::OnEnterState(State enterState)
 }
 
 
- const State& Game::getCurrentState() const
+ const State Game::getCurrentState() const
  {
 	 return m_CurrentState;
  }
+
 
  void Game::processInput()
 {

@@ -2,17 +2,20 @@
 #include "SpriteNode.h"
 #include "Arrow.h"
 #include "Game.h"
+#include "GameDebugData.h"
+#include "PlaneDebugData.h"
 #include "RectangleShapeNode.h"
 #include "Runway.h"
 
 
-
+void World::loadFont()
+{
+	m_fontHolder.loadFont(Font::ID::Vercetti_Regular, "media/fonts/Vercetti-Regular.ttf");
+}
 
 World::World(sf::RenderWindow& window) :
 	m_Window(window)
 	, m_WorldView(window.getDefaultView())
-	, m_Textures()
-	, m_SceneGraph()
 	, m_SceneLayers()
 	, m_WorldBounds({ 0,0 } ,{ m_WorldView.getSize().x * 2,m_WorldView.getSize().y * 2 })
 	, m_SpawnPosition(m_WorldView.getSize().x / 2, m_WorldView.getSize().y / 2)
@@ -20,15 +23,27 @@ World::World(sf::RenderWindow& window) :
 	m_WorldView.setCenter(m_WorldBounds.getCenter());
 	
 
+	
+	loadFont();
 	loadTextures();
 	buildScene();
+	initDebug();
 	m_WorldView.zoom(2.f);
+
+
 }
 
 void World::draw()
 {
 	m_Window.setView(m_WorldView);
 	m_Window.draw(m_SceneGraph);
+}
+
+void World::initDebug()
+{
+	auto& font = m_fontHolder.get(Font::ID::Vercetti_Regular);
+	auto gameDebug = std::make_unique<GameDebugData>(font);
+	m_SceneLayers[static_cast<int>(Layer::Debug)]->attachChild(std::move(gameDebug));
 }
 
 CommandQueue& World::getCommandQueue()
@@ -169,10 +184,22 @@ void World::buildScene()
 		aircraft->setDesiredVelocity(aircraft->getVelocity());
 		aircraft->AlignToVelocity();
 		aircraft->setScale({ 0.3f, 0.3f });
+
+		
+
+		
+		//Add debug data
+
+		auto& font = m_fontHolder.get(Font::ID::Vercetti_Regular);
 	
+
+		auto planeDebugData = std::make_unique<PlaneDebugData>(aircraft.get(), font);
+		m_SceneLayers[static_cast<int>(Layer::Debug)]->attachChild(std::move(planeDebugData));
+
+
+
 		m_SceneLayers[static_cast<int>(Layer::Air)]->attachChild(std::move(aircraft));
 	}
-
 
 }
 
@@ -180,8 +207,13 @@ void World::update(sf::Time deltaTime)
 {
 	while (!m_CommandQueue.isEmpty())
 		m_SceneGraph.onCommand(m_CommandQueue.pop(), deltaTime);
-	m_SceneGraph.update(deltaTime);
 
+	//On game over only update debug layer
+	if (Game::getInstance()->getCurrentState() == State::GameOver)
+		m_SceneLayers[static_cast<int>(Layer::Debug)]->update(deltaTime);
+	else
+		m_SceneGraph.update(deltaTime);
+	
 	//Check game over conditions
 
 	if (collisionCheck())
@@ -189,6 +221,8 @@ void World::update(sf::Time deltaTime)
 	if (!isInBorder())
 		Game::getInstance()->SwitchState(State::GameOver);
 }
+
+
 
 void World::zoomIn()
 {
