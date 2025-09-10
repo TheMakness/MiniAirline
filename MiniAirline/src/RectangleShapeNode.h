@@ -12,10 +12,12 @@ public :
 	void setSize(sf::Vector2f size);
 	void setFillColor(sf::Color color);
 	void setRotation(sf::Angle angle);
-					
+	
 
-private:
+protected:
 	sf::RectangleShape m_Shape;
+
+protected:
 	void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const override;
 };
 
